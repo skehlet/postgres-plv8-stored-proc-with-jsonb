@@ -1,9 +1,12 @@
 # Testing plv8 stored procedure to fix jsonb data
 
+```
 docker pull clkao/postgres-plv8
 docker run -d --name mypostgres clkao/postgres-plv8
-
 docker run -it --rm --link mypostgres:postgres clkao/postgres-plv8 psql -h postgres -U postgres
+```
+
+```sql
 create database stevek;
 \c stevek
 create extension plv8;
@@ -60,3 +63,4 @@ do language plv8 $$
     cursor.close();
     plan.free();
 $$;
+```
