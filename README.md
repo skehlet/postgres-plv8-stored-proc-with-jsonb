@@ -49,18 +49,21 @@ do language plv8 $$
     const batchSize = 10;
     let rows;
     while (rows = cursor.fetch(batchSize)) {
-        // don't know if batching these UPDATEs into a single transaction is any more performant
-        plv8.subtransaction(function () {
-            rows.forEach(function (row) {
-                const data = row.data;
-                plv8.elog(NOTICE, `BEFORE: ${JSON.stringify(data)}`);
-                fix(data);
-                plv8.elog(NOTICE, `AFTER: ${JSON.stringify(data)}`);
-                plv8.execute(`UPDATE foo SET data = $1 WHERE (data->>'id')::bigint = $2`, data, data.id);
-            });
+        rows.forEach(function (row) {
+            const data = row.data;
+            plv8.elog(NOTICE, `BEFORE: ${JSON.stringify(data)}`);
+            fix(data);
+            plv8.elog(NOTICE, `AFTER: ${JSON.stringify(data)}`);
+            plv8.execute(`UPDATE foo SET data = $1 WHERE (data->>'id')::bigint = $2`, data, data.id);
         });
     }
     cursor.close();
     plan.free();
 $$;
 ```
+
+## Notes
+* This will be one massive transaction but googling around (e.g. [this](http://stackoverflow.com/questions/709708/maximum-transaction-size-in-postgresql)) suggests maybe that's okay, unlike in Oracle where it'd build up a massive amount of redo.
+* The following helped understand transactions and subtransactions a bit: http://stackoverflow.com/a/25428060/296829
+
+
