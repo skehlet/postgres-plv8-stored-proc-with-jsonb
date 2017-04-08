@@ -63,7 +63,7 @@ $$;
 ```
 
 ## Notes
-* This will be one massive transaction but googling around (e.g. [this](http://stackoverflow.com/questions/709708/maximum-transaction-size-in-postgresql)) suggests maybe that's okay, unlike in Oracle where it'd build up a massive amount of redo.
+* This will be one massive transaction but googling around (e.g. [this](http://stackoverflow.com/questions/709708/maximum-transaction-size-in-postgresql)) suggests maybe that's okay, unlike in Oracle where it'd build up a massive amount of undo.
 * The following helped understand transactions and subtransactions a bit: http://stackoverflow.com/a/25428060/296829
 
 
